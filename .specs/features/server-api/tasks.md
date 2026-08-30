@@ -237,6 +237,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): map contract violations and pipeline errors`
+**Status**: ✅ Complete
 
 ---
 
