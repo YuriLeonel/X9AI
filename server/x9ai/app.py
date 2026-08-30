@@ -11,8 +11,10 @@ from fastapi.responses import JSONResponse
 
 from x9ai.config import Settings
 from x9ai.logs import log_request
-from x9ai.pipeline import Pipeline, StubPipeline
+from x9ai.normalizer import RuleBasedNormalizer
+from x9ai.pipeline import Pipeline, RealPipeline
 from x9ai.schemas import ErrorResponse, SuccessResponse
+from x9ai.transcriber import WhisperTranscriber
 
 logger = logging.getLogger("x9ai")
 
@@ -78,9 +80,13 @@ async def _handle(
     )
 
 
+def _real_pipeline(settings: Settings) -> Pipeline:
+    return RealPipeline(WhisperTranscriber(settings), RuleBasedNormalizer())
+
+
 def create_app(pipeline: Pipeline | None = None, settings: Settings | None = None) -> FastAPI:
-    pipeline = pipeline or StubPipeline()
     settings = settings or Settings()
+    pipeline = pipeline or _real_pipeline(settings)
 
     app = FastAPI(
         title="X9AI processing server",

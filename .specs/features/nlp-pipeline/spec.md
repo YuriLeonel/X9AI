@@ -138,7 +138,7 @@ fixed; assert calling twice yields identical output.
 | -------------- | ----- | ----- | ------ |
 | NLP-01 | P1: Real Composed Pipeline | Implemented | In Tasks |
 | NLP-02 | P1: Real Composed Pipeline | Implemented | In Tasks |
-| NLP-03 | P1: Real Composed Pipeline | Pending | Pending |
+| NLP-03 | P1: Real Composed Pipeline | Implemented | In Tasks |
 | NLP-04 | P1: Real Composed Pipeline | Implemented | In Tasks |
 | NLP-05 | P1: Transcription | Implemented | In Tasks |
 | NLP-06 | P1: Transcription | Implemented | In Tasks |
@@ -151,7 +151,7 @@ fixed; assert calling twice yields identical output.
 | NLP-13 | P1: Normalization | Implemented | In Tasks |
 | NLP-14 | P1: Normalization | Implemented | In Tasks |
 
-**Coverage:** 14 total, 0 mapped to tasks, 14 unmapped ⚠️
+**Coverage:** 14 total, 14 mapped to tasks, 0 unmapped
 
 ---
 

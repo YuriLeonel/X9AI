@@ -206,6 +206,7 @@ T5
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): adopt real pipeline as create_app default`
+**Status**: ✅ Complete
 
 ---
 
