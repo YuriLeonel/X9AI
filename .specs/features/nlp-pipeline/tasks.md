@@ -183,6 +183,33 @@ T5
 
 ---
 
+### T6: Pin create_app default pipeline composition (fix task from Verifier)
+
+**What**: Add `test_create_app_default_normalizes_transcription` to `server/tests/test_real_pipeline.py`: patch `x9ai.app.WhisperTranscriber` with a fake that returns un-normalized text, build the default `create_app()` (no pipeline arg), POST a clip, and assert the response `text` is normalized. Kills the surviving no-op-normalizer mutant (NLP-03 default composition).
+**Where**: `server/tests/test_real_pipeline.py`
+**Depends on**: T5
+**Reuses**: existing `_FakeTranscriber`, `create_app()` default
+**Requirement**: NLP-03
+
+**Tools**:
+
+- MCP: no MCP servers available
+- Skill: NONE
+
+**Done when**:
+
+- [ ] `test_create_app_default_normalizes_transcription` passes on the real tree
+- [ ] Swapping the default normalizer for a no-op makes that test fail (mutant killed, verified in scratch)
+- [ ] Full gate passes: pytest + ruff; Test count: 60 total (was 59)
+- [ ] Re-verification confirms the previously-surviving mutant is now killed
+
+**Tests**: integration
+**Gate**: full
+**Commit**: `test(server): pin create_app default pipeline composition`
+**Status**: ✅ Complete
+
+---
+
 ### T5: Adopt real pipeline as create_app default
 
 **What**: Modify `server/x9ai/app.py` `create_app(pipeline=None)`: the `None` default builds `RealPipeline(WhisperTranscriber(settings), RuleBasedNormalizer())`; HTTP/error/logging unchanged. Assert `create_app()` boots without faster-whisper and that, when a transcriber is injected through a real `RealPipeline`, `POST /process` returns the normalized text end-to-end (test injects a fake transcriber via a configured pipeline).

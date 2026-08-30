@@ -1,5 +1,6 @@
 """Integration tests: create_app real default pipeline (NLP-03, NLP-07)."""
 
+from unittest import mock
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -25,6 +26,16 @@ def test_create_app_default_is_real_pipeline() -> None:
         create_app()
         mock.assert_called_once()
 
+
+def test_create_app_default_normalizes_transcription() -> None:
+    with mock.patch("x9ai.app.WhisperTranscriber", return_value=_FakeTranscriber()):
+        client = TestClient(create_app())
+    response = client.post(
+        "/process",
+        files={"audio_file": ("clip.wav", b"\x00\x01\x02", "audio/wav")},
+    )
+    assert response.status_code == 200
+    assert response.json()["text"] == "O é bom."
 
 def test_process_routes_through_real_pipeline_end_to_end() -> None:
     pipeline = RealPipeline(_FakeTranscriber(), RuleBasedNormalizer())
