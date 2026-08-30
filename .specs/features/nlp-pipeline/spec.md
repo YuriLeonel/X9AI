@@ -136,20 +136,20 @@ fixed; assert calling twice yields identical output.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| NLP-01 | P1: Real Composed Pipeline | Implemented | In Tasks |
-| NLP-02 | P1: Real Composed Pipeline | Implemented | In Tasks |
-| NLP-03 | P1: Real Composed Pipeline | Implemented | In Tasks |
-| NLP-04 | P1: Real Composed Pipeline | Implemented | In Tasks |
-| NLP-05 | P1: Transcription | Implemented | In Tasks |
-| NLP-06 | P1: Transcription | Implemented | In Tasks |
-| NLP-07 | P1: Transcription | Implemented | In Tasks |
-| NLP-08 | P1: Transcription | Implemented | In Tasks |
-| NLP-09 | P1: Transcription | Implemented | In Tasks |
-| NLP-10 | P1: Normalization | Implemented | In Tasks |
-| NLP-11 | P1: Normalization | Implemented | In Tasks |
-| NLP-12 | P1: Normalization | Implemented | In Tasks |
-| NLP-13 | P1: Normalization | Implemented | In Tasks |
-| NLP-14 | P1: Normalization | Implemented | In Tasks |
+| NLP-01 | P1: Real Composed Pipeline | Implemented | Verified |
+| NLP-02 | P1: Real Composed Pipeline | Implemented | Verified |
+| NLP-03 | P1: Real Composed Pipeline | Implemented | Verified |
+| NLP-04 | P1: Real Composed Pipeline | Implemented | Verified |
+| NLP-05 | P1: Transcription | Implemented | Verified |
+| NLP-06 | P1: Transcription | Implemented | Verified |
+| NLP-07 | P1: Transcription | Implemented | Verified |
+| NLP-08 | P1: Transcription | Implemented | Verified |
+| NLP-09 | P1: Transcription | Implemented | Verified |
+| NLP-10 | P1: Normalization | Implemented | Verified |
+| NLP-11 | P1: Normalization | Implemented | Verified |
+| NLP-12 | P1: Normalization | Implemented | Verified |
+| NLP-13 | P1: Normalization | Implemented | Verified |
+| NLP-14 | P1: Normalization | Implemented | Verified |
 
 **Coverage:** 14 total, 14 mapped to tasks, 0 unmapped
 

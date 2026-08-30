@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 3,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "surviving_mutant::pin composed default wiring which concrete transcriber normalizer with an end to end or intra component assertion not just mock assert called once on the composed class",
+      "text": "Pin composed-default wiring (which concrete transcriber/normalizer) with an end-to-end or intra-component assertion, not just mock.assert_called_once on the composed class.",
+      "signal": "surviving_mutant",
+      "scope": "app-layer;create_app-defaults",
+      "status": "candidate",
+      "features": [
+        "nlp-pipeline"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "server/x9ai/app.py:84 (mutant 6, validation.md) (app-layer;create_app-defaults)"
+      ],
+      "created": "2026-08-30T23:48:35Z",
+      "last_seen": "2026-08-30T23:48:35Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::a create app default composition ac needs a test asserting the composed concrete components mocking only the wrapper class leaves the default s real wiring unpinned",
+      "text": "A create_app default-composition AC needs a test asserting the composed concrete components; mocking only the wrapper class leaves the default's real wiring unpinned.",
+      "signal": "spec_precision_gap",
+      "scope": "app-layer;create_app-defaults",
+      "status": "candidate",
+      "features": [
+        "nlp-pipeline"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "NLP-03, tests/test_real_pipeline.py:23 (validation.md) (app-layer;create_app-defaults)"
+      ],
+      "created": "2026-08-30T23:48:36Z",
+      "last_seen": "2026-08-30T23:48:36Z"
+    }
+  ]
+}
