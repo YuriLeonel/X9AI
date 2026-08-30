@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Rust
+target/
+**/*.rs.bk
+
+# Local server config & state
+.env
+*.local
+
+# Model caches
+.cache/huggingface/
+.cache/ctranslate2/
+
+# Golden corpus (recorded audio is user data, not committed)
+corpus/audio/
+corpus/*.wav
+corpus/*.mp3
+corpus/*.ogg
+
+# OS
+Thumbs.db
+.DS_Store
