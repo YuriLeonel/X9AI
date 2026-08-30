@@ -136,10 +136,10 @@ fixed; assert calling twice yields identical output.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| NLP-01 | P1: Real Composed Pipeline | Pending | Pending |
-| NLP-02 | P1: Real Composed Pipeline | Pending | Pending |
+| NLP-01 | P1: Real Composed Pipeline | Implemented | In Tasks |
+| NLP-02 | P1: Real Composed Pipeline | Implemented | In Tasks |
 | NLP-03 | P1: Real Composed Pipeline | Pending | Pending |
-| NLP-04 | P1: Real Composed Pipeline | Pending | Pending |
+| NLP-04 | P1: Real Composed Pipeline | Implemented | In Tasks |
 | NLP-05 | P1: Transcription | Implemented | In Tasks |
 | NLP-06 | P1: Transcription | Implemented | In Tasks |
 | NLP-07 | P1: Transcription | Implemented | In Tasks |

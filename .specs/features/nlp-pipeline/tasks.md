@@ -179,6 +179,7 @@ T5
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add composed real pipeline`
+**Status**: ✅ Complete
 
 ---
 
