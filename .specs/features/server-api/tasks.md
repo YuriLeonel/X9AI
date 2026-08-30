@@ -34,7 +34,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 | ---------- | ----------- | ------- |
 | Quick | After unit-only tasks | `.venv/bin/python -m pytest -q` |
 | Full | After route/integration tasks | `.venv/bin/python -m pytest && .venv/bin/ruff check .` |
-| Build | Scaffold/config tasks + pre-merge | `.venv/bin/python -m pytest && .venv/bin/ruff check . && .venv/bin/python -c "from x9ai.app import create_app; a = create_app(); assert '/process' in a.openapi()['paths']"` |
+| Build | Scaffold/config tasks + pre-merge | `.venv/bin/python -m pytest && .venv/bin/ruff check . && .venv/bin/python -c "from x9ai.app import create_app; a = create_app(); assert [ (r.path, sorted(r.methods)) for r in a.routes if type(r).__name__ == 'APIRoute' ] == [('/process', ['POST'])]"` |
 
 ---
 
@@ -207,6 +207,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): handle POST /process happy path with timing`
+**Status**: ✅ Complete
 
 ---
 
