@@ -140,11 +140,11 @@ fixed; assert calling twice yields identical output.
 | NLP-02 | P1: Real Composed Pipeline | Pending | Pending |
 | NLP-03 | P1: Real Composed Pipeline | Pending | Pending |
 | NLP-04 | P1: Real Composed Pipeline | Pending | Pending |
-| NLP-05 | P1: Transcription | Pending | Pending |
-| NLP-06 | P1: Transcription | Pending | Pending |
-| NLP-07 | P1: Transcription | Pending | Pending |
+| NLP-05 | P1: Transcription | Implemented | In Tasks |
+| NLP-06 | P1: Transcription | Implemented | In Tasks |
+| NLP-07 | P1: Transcription | Implemented | In Tasks |
 | NLP-08 | P1: Transcription | Implemented | In Tasks |
-| NLP-09 | P1: Transcription | Pending | Pending |
+| NLP-09 | P1: Transcription | Implemented | In Tasks |
 | NLP-10 | P1: Normalization | Implemented | In Tasks |
 | NLP-11 | P1: Normalization | Implemented | In Tasks |
 | NLP-12 | P1: Normalization | Implemented | In Tasks |

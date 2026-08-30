@@ -152,6 +152,7 @@ T5
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add lazy faster-whisper transcriber`
+**Status**: ✅ Complete
 
 ---
 
