@@ -96,6 +96,7 @@ T7  (depends on T5)
 **Tests**: none (scaffold; build gate only)
 **Gate**: build
 **Commit**: `chore(server): scaffold python package and toolchain`
+**Status**: ✅ Complete
 
 ---
 
