@@ -123,19 +123,19 @@ stub's sleep window; a stub that counts calls proves the seam receives bytes + l
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| SRV-01 | P1: Core Contract | Design | Pending |
-| SRV-02 | P1: Core Contract | Design | Pending |
-| SRV-03 | P1: Core Contract | Design | Pending |
-| SRV-04 | P1: Core Contract | Design | Pending |
-| SRV-05 | P1: Error Mapping | Design | Pending |
-| SRV-06 | P1: Error Mapping | Design | Pending |
-| SRV-07 | P1: Error Mapping | Design | Pending |
-| SRV-08 | P1: Error Mapping | Design | Pending |
-| SRV-09 | P1: Pipeline Seam | Design | Pending |
-| SRV-10 | P1: Pipeline Seam | Design | Pending |
-| SRV-11 | P1: Pipeline Seam | Design | Pending |
+| SRV-01 | P1: Core Contract | Implemented | Verified |
+| SRV-02 | P1: Core Contract | Implemented | Verified |
+| SRV-03 | P1: Core Contract | Implemented | Verified |
+| SRV-04 | P1: Core Contract | Implemented | Verified |
+| SRV-05 | P1: Error Mapping | Implemented | Verified |
+| SRV-06 | P1: Error Mapping | Implemented | Verified |
+| SRV-07 | P1: Error Mapping | Implemented | Verified |
+| SRV-08 | P1: Error Mapping | Implemented | Verified |
+| SRV-09 | P1: Pipeline Seam | Implemented | Verified |
+| SRV-10 | P1: Pipeline Seam | Implemented | Verified |
+| SRV-11 | P1: Pipeline Seam | Implemented | Verified |
 
-**Coverage:** 11 total, 0 mapped to tasks, 11 unmapped
+**Coverage:** 11 total, 11 mapped to tasks, 0 unmapped
 
 ---
 

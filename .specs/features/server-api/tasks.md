@@ -265,6 +265,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): emit structured per-request log line`
+**Status**: ✅ Complete
 
 ---
 
