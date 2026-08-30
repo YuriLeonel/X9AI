@@ -177,6 +177,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add env-configurable settings`
+**Status**: ✅ Complete
 
 ---
 
