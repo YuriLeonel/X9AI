@@ -145,11 +145,11 @@ fixed; assert calling twice yields identical output.
 | NLP-07 | P1: Transcription | Pending | Pending |
 | NLP-08 | P1: Transcription | Implemented | In Tasks |
 | NLP-09 | P1: Transcription | Pending | Pending |
-| NLP-10 | P1: Normalization | Pending | Pending |
-| NLP-11 | P1: Normalization | Pending | Pending |
-| NLP-12 | P1: Normalization | Pending | Pending |
-| NLP-13 | P1: Normalization | Pending | Pending |
-| NLP-14 | P1: Normalization | Pending | Pending |
+| NLP-10 | P1: Normalization | Implemented | In Tasks |
+| NLP-11 | P1: Normalization | Implemented | In Tasks |
+| NLP-12 | P1: Normalization | Implemented | In Tasks |
+| NLP-13 | P1: Normalization | Implemented | In Tasks |
+| NLP-14 | P1: Normalization | Implemented | In Tasks |
 
 **Coverage:** 14 total, 0 mapped to tasks, 14 unmapped ⚠️
 

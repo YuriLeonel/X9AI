@@ -124,6 +124,7 @@ T5
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add rule-based pt-br normalizer`
+**Status**: ✅ Complete
 
 ---
 
