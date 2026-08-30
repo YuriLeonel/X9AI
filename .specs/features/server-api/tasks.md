@@ -150,6 +150,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add success and error response schemas`
+**Status**: ✅ Complete
 
 ---
 
