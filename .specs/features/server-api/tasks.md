@@ -34,7 +34,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 | ---------- | ----------- | ------- |
 | Quick | After unit-only tasks | `.venv/bin/python -m pytest -q` |
 | Full | After route/integration tasks | `.venv/bin/python -m pytest && .venv/bin/ruff check .` |
-| Build | Scaffold/config tasks + pre-merge | `.venv/bin/python -m pytest && .venv/bin/ruff check . && .venv/bin/python -c "from x9ai.app import create_app; a = create_app(); assert '/process' in a.openapi()['paths']"` |
+| Build | Scaffold/config tasks + pre-merge | `.venv/bin/python -m pytest && .venv/bin/ruff check . && .venv/bin/python -c "from x9ai.app import create_app; a = create_app(); assert [ (r.path, sorted(r.methods)) for r in a.routes if type(r).__name__ == 'APIRoute' ] == [('/process', ['POST'])]"` |
 
 ---
 
@@ -96,6 +96,7 @@ T7  (depends on T5)
 **Tests**: none (scaffold; build gate only)
 **Gate**: build
 **Commit**: `chore(server): scaffold python package and toolchain`
+**Status**: ✅ Complete
 
 ---
 
@@ -122,6 +123,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add pipeline seam with stub implementation`
+**Status**: ✅ Complete
 
 ---
 
@@ -148,6 +150,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add success and error response schemas`
+**Status**: ✅ Complete
 
 ---
 
@@ -174,6 +177,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add env-configurable settings`
+**Status**: ✅ Complete
 
 ---
 
@@ -203,6 +207,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): handle POST /process happy path with timing`
+**Status**: ✅ Complete
 
 ---
 
@@ -232,6 +237,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): map contract violations and pipeline errors`
+**Status**: ✅ Complete
 
 ---
 
@@ -259,6 +265,7 @@ T7  (depends on T5)
 **Tests**: integration
 **Gate**: full
 **Commit**: `feat(server): emit structured per-request log line`
+**Status**: ✅ Complete
 
 ---
 

@@ -28,7 +28,7 @@ Projects/commits must reference these IDs and update this log when a decision is
 
 Features (each: Specify → Design → Tasks → Execute → Verifier → merge to `main`):
 
-1. `server-api` — FastAPI `POST /process` HTTP boundary, JSON contract, error mapping, pipeline seam (stub pipeline), config/logging, tests. (`docs/spec.md` §6, §4.1)
+1. `server-api` ✅ DONE — FastAPI `POST /process` HTTP boundary, JSON contract, error mapping, pipeline seam (stub), logs/timing; validated PASS (11/11 ACs, 31 tests, 3/3 sensor killed). (`docs/spec.md` §6, §4.1)
 2. `nlp-pipeline` — faster-whisper transcription + rule-based PT-BR normalization wired into the seam; injectable stub for gates. (§5)
 3. `golden-oracle` — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. (§9)
 4. `client` — Rust client: core (state machine, clipboard retry 3×50ms, HTTP client, parsing; tested on Linux) + cfg-gated Windows glue. (§3.1, §4, §7)
@@ -37,6 +37,7 @@ Execute order is dependency-safe: each branch starts from `main` after its depen
 
 ## Handoff
 
-- Current state: repo scaffolded (git initialized, `.gitignore`, Rust toolchain ready); no feature code yet.
-- Next: (fill in the feature/task you are about to start, then re-read `STATE.md` on resume).
+- Current state: `server-api` complete — validated PASS (Verifier, `validation.md`), merged to `main`. Server package at `server/x9ai/` (app, pipeline seam+stub, schemas, config, logs) with 31 passing tests; venv at `server/.venv`.
+- Next: start `nlp-pipeline` feature (Specify → Design → Tasks → Execute): faster-whisper transcription + rule-based PT-BR normalization behind the existing `Pipeline` seam; keep the stub injectable for deterministic gates.
+- Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.
 - Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.
