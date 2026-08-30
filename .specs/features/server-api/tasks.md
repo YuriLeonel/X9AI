@@ -123,6 +123,7 @@ T7  (depends on T5)
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(server): add pipeline seam with stub implementation`
+**Status**: ✅ Complete
 
 ---
 
