@@ -32,11 +32,12 @@ pub enum Trigger {
 pub enum Effect {
     /// Start capturing (recorder, `Idle + Hotkey`).
     BeginRecording,
-    /// Stop the recorder and send the capture to `/process`; empty `wav` means
-    /// "commit requested, bytes arrive via a later `RecordingDone`".
+    /// Stop the recorder and send the capture to `/process`. An empty `wav`
+    /// is a commit marker: no HTTP yet, the bytes arrive via a later
+    /// `RecordingDone`. `meta` is the `metadata_json` the App attaches.
     StopAndProcess {
         wav: Vec<u8>,
-        timestamp: u64,
+        meta: String,
     },
     Ignore,
     WriteClipboard {
@@ -84,7 +85,7 @@ impl AppState {
                 self.state = State::Processing;
                 Effect::StopAndProcess {
                     wav: Vec::new(),
-                    timestamp: 0,
+                    meta: String::new(),
                 }
             }
             (State::Processing, Trigger::Hotkey) => {
@@ -94,12 +95,18 @@ impl AppState {
             (State::Recording, Trigger::RecordingDone(Ok(wav))) => {
                 // 300s cap auto-stop (CLI-10): recorder hands bytes straight in.
                 self.state = State::Processing;
-                Effect::StopAndProcess { wav, timestamp: 0 }
+                Effect::StopAndProcess {
+                    wav,
+                    meta: String::new(),
+                }
             }
             (State::Processing, Trigger::RecordingDone(Ok(wav))) => {
                 // Hotkey-stop path: the commit marker was returned, now the
                 // real payload arrives. Already Processing; carry it forward.
-                Effect::StopAndProcess { wav, timestamp: 0 }
+                Effect::StopAndProcess {
+                    wav,
+                    meta: String::new(),
+                }
             }
             (State::Recording, Trigger::RecordingDone(Err(_msg))) => {
                 // No input device / zero-byte capture / device failure (CLI-09).
