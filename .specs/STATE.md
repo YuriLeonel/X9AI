@@ -33,13 +33,14 @@ Features (each: Specify → Design → Tasks → Execute → Verifier → merge 
 1. `server-api` ✅ DONE — FastAPI `POST /process` HTTP boundary, JSON contract, error mapping, pipeline seam (stub), logs/timing; validated PASS (11/11 ACs, 31 tests, 3/3 sensor killed). (`docs/spec.md` §6, §4.1)
 2. `nlp-pipeline` ✅ DONE — faster-whisper transcription + rule-based PT-BR normalization wired into the seam; injectable stub for gates. Validated PASS (14/14 ACs, 60 tests, 4/4 sensor killed). Merged to `main` (66c537d, PR #1). (§5)
 3. `golden-oracle` ✅ DONE — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. Validated PASS (16/16 ACs, 97 tests, 3/3 sensor killed). Merged to `main` (fd15708 via 6303183, PR #2). (§9)
-4. `client` 🔄 IN PROGRESS — Rust client: core (state machine, clipboard retry 3×50ms, HTTP client, parsing; tested on Linux) + cfg-gated Windows glue. (§3.1, §4, §7) — Branch `feature/client`; Spec (18 ACs) + Design (AD-013/014) approved; Tasks written + validated (0 errors).
+4. `client` ✅ VALIDATED, PENDING MERGE — Rust client: core (state machine, clipboard retry 3×50ms, HTTP client, parsing; tested on Linux) + cfg-gated Windows glue. (§3.1, §4, §7) — Branch `feature/client`; validated PASS (18/18 ACs, 72 tests, 3/3 sensor killed); awaiting push + PR (`gh pr create`, no merge).
 
 Execute order is dependency-safe: each branch starts from `main` after its dependency is merged.
 
 ## Handoff
 
 - `server-api` and `nlp-pipeline` and `golden-oracle` all merged to `main` (66c537d, fd15708). 97 passing tests at `server/.venv`.
-- Current state: branch `feature/client` (from `main`). `client` feature: Spec/Design approved, Tasks written and validated. Ready for Execute (Phases 1-4, 16 tasks). (§3.1, §4, §7)
-- Pre-UAT step recorded in the §9 evidence review: capture real PT-BR clips and run `python -m x9ai.oracle run <corpus>` with `[whisper,oracle]` installed before claiming a live v1 PASS.
+- `client` feature: implementation complete on `feature/client` (16/16 tasks done, 18/18 ACs ✅ Verified). Verifier PASS — 72 tests (58 lib unit + 7 integration + 7 doc), Build gate (fmt + clippy -D warnings + test + `cargo check --target x86_64-pc-windows-gnu`) exit 0, discrimination sensor 3/3 killed. Evidence: `.specs/features/client/validation.md`. Local branch commits up to `6ae7d89`; NOT yet pushed, PR not opened (requires explicit go-ahead).
+- Next step: with user go-ahead — `git push https://github.com/YuriLeonel/X9AI.git feature/client` then `gh pr create` (NO merge; UI drop-down stays open; PR link is the finish gate).
+- Pre-UAT step recorded in the §9 evidence review: capture real PT-BR clips and run `python -m x9ai.oracle run <corpus>` with `[whisper,oracle]` installed before claiming a live v1 PASS. Windows runtime smoke (tray/hotkey/clipboard/toast) is a documented post-merge manual step (AD-010, spec §Success Criteria).
 - Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.

@@ -13,11 +13,11 @@ WAV writer, HTTP client, clipboard-retry policy, error mapping) validated on Lin
 
 ## Goals
 
-- [ ] A `Recording → Processing → Success/Error → Idle` state machine (§4) with guarded transitions and at most one in-flight recording, unit-tested on Linux
-- [ ] A `/process` HTTP client implementing §6 exactly (`audio_file` WAV + `metadata` JSON multipart; success/error parsing), endpoint `http://127.0.0.1:8000` overridable via `X9AI_SERVER_URL`
-- [ ] Clipboard write reliability §4.3: up to 3 attempts at 50ms apart, deterministic on Linux via an injected sleeper
-- [ ] The three §4.2 visual states rendered: tray tooltip "Recording…"/"Processing…" while active, one final Success/Error toast
-- [ ] Windows glue (`tray-icon`, `global-hotkey`, `cpal`, `arboard`, `winrt-notification`) cfg-gated per AD-010; crate builds on Linux with a stub `main` and the glue type-checks under `cargo check --target x86_64-pc-windows-gnu` when the toolchain permits, otherwise a documented Windows build step
+- [x] A `Recording → Processing → Success/Error → Idle` state machine (§4) with guarded transitions and at most one in-flight recording, unit-tested on Linux
+- [x] A `/process` HTTP client implementing §6 exactly (`audio_file` WAV + `metadata` JSON multipart; success/error parsing), endpoint `http://127.0.0.1:8000` overridable via `X9AI_SERVER_URL`
+- [x] Clipboard write reliability §4.3: up to 3 attempts at 50ms apart, deterministic on Linux via an injected sleeper
+- [x] The three §4.2 visual states rendered: tray tooltip "Recording…"/"Processing…" while active, one final Success/Error toast
+- [x] Windows glue (`tray-icon`, `global-hotkey`, `cpal`, `arboard`, `winrt-notification`) cfg-gated per AD-010; crate builds on Linux with a stub `main` and the glue type-checks under `cargo check --target x86_64-pc-windows-gnu` when the toolchain permits, otherwise a documented Windows build step
 
 ## Out of Scope
 
@@ -212,24 +212,24 @@ type-check / manual smoke).
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| CLI-01 | P1: State machine | Tasks | Pending |
-| CLI-02 | P1: State machine | Tasks | Pending |
-| CLI-03 | P1: State machine | Tasks | Pending |
-| CLI-04 | P1: State machine | Tasks | Pending |
-| CLI-05 | P1: Non-blocking processing | Tasks | Pending |
-| CLI-06 | P1: Visual states | Tasks | Pending |
-| CLI-07 | P1: Visual states | Tasks | Pending |
-| CLI-08 | P1: Recording → WAV | Tasks | Pending |
-| CLI-09 | P1: Recording → WAV | Tasks | Pending |
-| CLI-10 | P1: Recording → WAV | Tasks | Pending |
-| CLI-11 | P1: HTTP boundary | Tasks | Pending |
-| CLI-12 | P1: HTTP boundary | Tasks | Pending |
-| CLI-13 | P1: HTTP boundary | Tasks | Pending |
-| CLI-14 | P1: HTTP boundary | Tasks | Pending |
-| CLI-15 | P1: Clipboard reliability | Tasks | Pending |
-| CLI-16 | P1: Clipboard reliability | Tasks | Pending |
-| CLI-17 | P1: Final notification | Tasks | Pending |
-| CLI-18 | P1: Final notification | Tasks | Pending |
+| CLI-01 | P1: State machine | Tasks | ✅ Verified |
+| CLI-02 | P1: State machine | Tasks | ✅ Verified |
+| CLI-03 | P1: State machine | Tasks | ✅ Verified |
+| CLI-04 | P1: State machine | Tasks | ✅ Verified |
+| CLI-05 | P1: Non-blocking processing | Tasks | ✅ Verified |
+| CLI-06 | P1: Visual states | Tasks | ✅ Verified |
+| CLI-07 | P1: Visual states | Tasks | ✅ Verified |
+| CLI-08 | P1: Recording → WAV | Tasks | ✅ Verified |
+| CLI-09 | P1: Recording → WAV | Tasks | ✅ Verified |
+| CLI-10 | P1: Recording → WAV | Tasks | ✅ Verified |
+| CLI-11 | P1: HTTP boundary | Tasks | ✅ Verified |
+| CLI-12 | P1: HTTP boundary | Tasks | ✅ Verified |
+| CLI-13 | P1: HTTP boundary | Tasks | ✅ Verified |
+| CLI-14 | P1: HTTP boundary | Tasks | ✅ Verified |
+| CLI-15 | P1: Clipboard reliability | Tasks | ✅ Verified |
+| CLI-16 | P1: Clipboard reliability | Tasks | ✅ Verified |
+| CLI-17 | P1: Final notification | Tasks | ✅ Verified |
+| CLI-18 | P1: Final notification | Tasks | ✅ Verified |
 
 **Coverage:** 18 total, 18 mapped to tasks, 0 unmapped
 
@@ -237,6 +237,6 @@ type-check / manual smoke).
 
 ## Success Criteria
 
-- [ ] Core unit tests on Linux green: state machine transitions + guards, WAV header bytes, multipart structure asserted by a stub listener, success/error/malformed response parsing, clipboard 3×50ms retry with injected sleeper, generic-error mapping on every failure path, non-blocking dispatch, tooltip label mapping
-- [ ] Crate compiles and tests build on Linux (Windows glue stubbed `main`) and, where the toolchain permits, `cargo check --target x86_64-pc-windows-gnu` type-checks the glue module
-- [ ] Full Windows build + manual loop smoke (tray shows states, hotkey captures, clipboard lands, toasts pop) documented as a post-merge manual step on a Windows host (AD-010)
+- [x] Core unit tests on Linux green: state machine transitions + guards, WAV header bytes, multipart structure asserted by a stub listener, success/error/malformed response parsing, clipboard 3×50ms retry with injected sleeper, generic-error mapping on every failure path, non-blocking dispatch, tooltip label mapping
+- [x] Crate compiles and tests build on Linux (Windows glue stubbed `main`) and, where the toolchain permits, `cargo check --target x86_64-pc-windows-gnu` type-checks the glue module
+- [x] Full Windows build + manual loop smoke (tray shows states, hotkey captures, clipboard lands, toasts pop) documented as a post-merge manual step on a Windows host (AD-010)

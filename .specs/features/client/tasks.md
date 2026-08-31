@@ -106,11 +106,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] `cargo build` succeeds on Linux (Windows deps not compiled on the host target)
-- [ ] `cargo check --target x86_64-pc-windows-gnu` succeeds (cfg(windows) skeleton + placeholder `run()` type-check)
-- [ ] `cargo test -q` on Linux reports zero test binaries failing (0 tests - no silent deletions introduced later are possible from here)
-- [ ] Build gate passes: `cargo fmt --check && cargo clippy -- -D warnings && cargo test -q && cargo check --target x86_64-pc-windows-gnu`
-- [ ] Test count: 0 tests pass (scaffold - no logic yet)
+- [x] `cargo build` succeeds on Linux (Windows deps not compiled on the host target)
+- [x] `cargo check --target x86_64-pc-windows-gnu` succeeds (cfg(windows) skeleton + placeholder `run()` type-check)
+- [x] `cargo test -q` on Linux reports zero test binaries failing (0 tests - no silent deletions introduced later are possible from here)
+- [x] Build gate passes: `cargo fmt --check && cargo clippy -- -D warnings && cargo test -q && cargo check --target x86_64-pc-windows-gnu`
+- [x] Test count: 0 tests pass (scaffold - no logic yet)
 
 **Tests**: none
 **Gate**: build
@@ -136,11 +136,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Every legal transition moves state and returns the matching effect
-- [ ] `Processing + Hotkey` and double-taps leave state unchanged (CLI-02/03)
-- [ ] Second recording cannot start while one is active (CLI-04)
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 12 tests in `state.rs` pass (no silent deletions)
+- [x] Every legal transition moves state and returns the matching effect
+- [x] `Processing + Hotkey` and double-taps leave state unchanged (CLI-02/03)
+- [x] Second recording cannot start while one is active (CLI-04)
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 12 tests in `state.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -164,12 +164,12 @@ T15 → T16
 
 **Done when**:
 
-- [ ] WAV header bytes asserted: `RIFF`/`WAVE`/`fmt ` magic, PCM16 (audio_format=1), mono (channels=1), supplied sample rate, block align = 2, data length = samples*2
-- [ ] Sample conversion clips at ±1.0 → i16 max/min and interleaves mono samples
-- [ ] `metadata_json` produces the exact `{"language":"pt","client_timestamp":<ts>}` bytes
-- [ ] `MAX_RECORD_SECONDS == 300`
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 9 tests in `audio.rs` pass (no silent deletions)
+- [x] WAV header bytes asserted: `RIFF`/`WAVE`/`fmt ` magic, PCM16 (audio_format=1), mono (channels=1), supplied sample rate, block align = 2, data length = samples*2
+- [x] Sample conversion clips at ±1.0 → i16 max/min and interleaves mono samples
+- [x] `metadata_json` produces the exact `{"language":"pt","client_timestamp":<ts>}` bytes
+- [x] `MAX_RECORD_SECONDS == 300`
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 9 tests in `audio.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -193,11 +193,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] `notice_text(Notice::Success)` == "Pronto para colar!"
-- [ ] `notice_text(Notice::Error)` == "Falha no processamento. Verifique a conexão com o servidor."
-- [ ] A fake `Notifier` records exactly one `show` with (title, body) derived from `notice_text`
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 4 tests in `notify.rs` pass (no silent deletions)
+- [x] `notice_text(Notice::Success)` == "Pronto para colar!"
+- [x] `notice_text(Notice::Error)` == "Falha no processamento. Verifique a conexão com o servidor."
+- [x] A fake `Notifier` records exactly one `show` with (title, body) derived from `notice_text`
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 4 tests in `notify.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -221,12 +221,12 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Success on the 1st/2nd/3rd attempt returns `Ok` and stops retrying (failing sink records attempt count)
-- [ ] A recorded `Sleeper` proves exactly `attempts-1` sleeps of `delay_ms` between attempts
-- [ ] All 3 attempts failing returns the error and calls `set` exactly 3 times (CLI-16)
-- [ ] Defaults: `CLIPBOARD_ATTEMPTS == 3`, `CLIPBOARD_DELAY_MS == 50`
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 7 tests in `retry.rs` pass (no silent deletions)
+- [x] Success on the 1st/2nd/3rd attempt returns `Ok` and stops retrying (failing sink records attempt count)
+- [x] A recorded `Sleeper` proves exactly `attempts-1` sleeps of `delay_ms` between attempts
+- [x] All 3 attempts failing returns the error and calls `set` exactly 3 times (CLI-16)
+- [x] Defaults: `CLIPBOARD_ATTEMPTS == 3`, `CLIPBOARD_DELAY_MS == 50`
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 7 tests in `retry.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -250,11 +250,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] `endpoint_from_env(None)` and a blank env both yield `http://127.0.0.1:8000`; a set `X9AI_SERVER_URL` overrides it (CLI-12)
-- [ ] `parse_response` returns `text` on `{"status":"success","text":...}`, and `ProcError` on `status:"error"`, non-2xx status line, malformed JSON, and missing `text` (CLI-14)
-- [ ] `Processor` trait exists with the signature above
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 8 tests in `http.rs` pass (no silent deletions)
+- [x] `endpoint_from_env(None)` and a blank env both yield `http://127.0.0.1:8000`; a set `X9AI_SERVER_URL` overrides it (CLI-12)
+- [x] `parse_response` returns `text` on `{"status":"success","text":...}`, and `ProcError` on `status:"error"`, non-2xx status line, malformed JSON, and missing `text` (CLI-14)
+- [x] `Processor` trait exists with the signature above
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 8 tests in `http.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -280,11 +280,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Stub listener records one `POST` to `/process` with multipart containing exactly fields `audio_file` (raw WAV bytes) and `metadata` (JSON with `language:"pt"` and integer `client_timestamp`) - CLI-11
-- [ ] 2xx+success body → `Ok(text)` (CLI-13); `status:"error"`, 4xx/5xx, malformed JSON, and connection-refused → `ProcError` (CLI-14)
-- [ ] Uses `endpoint_from_env` output as the base URL; hits `{endpoint}/process`
-- [ ] Full gate passes: `cargo test -q` (integration test runs)
-- [ ] Test count: 7 tests pass in `process_integration.rs` (no silent deletions); unit suite stays green
+- [x] Stub listener records one `POST` to `/process` with multipart containing exactly fields `audio_file` (raw WAV bytes) and `metadata` (JSON with `language:"pt"` and integer `client_timestamp`) - CLI-11
+- [x] 2xx+success body → `Ok(text)` (CLI-13); `status:"error"`, 4xx/5xx, malformed JSON, and connection-refused → `ProcError` (CLI-14)
+- [x] Uses `endpoint_from_env` output as the base URL; hits `{endpoint}/process`
+- [x] Full gate passes: `cargo test -q` (integration test runs)
+- [x] Test count: 7 tests pass in `process_integration.rs` (no silent deletions); unit suite stays green
 
 **Tests**: integration
 **Gate**: full
@@ -308,13 +308,13 @@ T15 → T16
 
 **Done when**:
 
-- [ ] `ui_tooltip` returns exactly "X9AI" / "Recording…" / "Processing…" per state (CLI-06/07)
-- [ ] Hotkey in `Idle` → `BeginRecording`; hotkey in `Recording` → `StopAndProcess` (with `metadata_json`); hotkey in `Processing` → `Ignore` (single-flight, CLI-04)
-- [ ] Zero-byte capture → `Notify(Error)` and NO `StopAndProcess` (no HTTP, CLI-09); healthy capture → `StopAndProcess`
-- [ ] `ProcessOutcome::Success` → `WriteClipboard`; `ProcessOutcome::Error` → `Notify(Error)`, never `WriteClipboard`
-- [ ] Success also renders `RenderTooltip` reset; every failure lands on the generic error (CLI-18 mapping)
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 13 tests in `app.rs` pass (no silent deletions)
+- [x] `ui_tooltip` returns exactly "X9AI" / "Recording…" / "Processing…" per state (CLI-06/07)
+- [x] Hotkey in `Idle` → `BeginRecording`; hotkey in `Recording` → `StopAndProcess` (with `metadata_json`); hotkey in `Processing` → `Ignore` (single-flight, CLI-04)
+- [x] Zero-byte capture → `Notify(Error)` and NO `StopAndProcess` (no HTTP, CLI-09); healthy capture → `StopAndProcess`
+- [x] `ProcessOutcome::Success` → `WriteClipboard`; `ProcessOutcome::Error` → `Notify(Error)`, never `WriteClipboard`
+- [x] Success also renders `RenderTooltip` reset; every failure lands on the generic error (CLI-18 mapping)
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 13 tests in `app.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -338,10 +338,10 @@ T15 → T16
 
 **Done when**:
 
-- [ ] A test spawns a closure that blocks on a channel; `spawn_processing` returns while the closure is still blocked (CLI-05)
-- [ ] The spawned closure runs to completion on a separate thread (flag set + channel release)
-- [ ] Gate check passes: `cargo test -q --lib`
-- [ ] Test count: 2 tests in `runner.rs` pass (no silent deletions)
+- [x] A test spawns a closure that blocks on a channel; `spawn_processing` returns while the closure is still blocked (CLI-05)
+- [x] The spawned closure runs to completion on a separate thread (flag set + channel release)
+- [x] Gate check passes: `cargo test -q --lib`
+- [x] Test count: 2 tests in `runner.rs` pass (no silent deletions)
 
 **Tests**: unit
 **Gate**: quick
@@ -367,9 +367,9 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` (full Build gate incl. Linux `cargo test`)
-- [ ] Pump loop is structured so tray-icon + global-hotkey event delivery (both require a pump on their owning thread) can attach
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` (full Build gate incl. Linux `cargo test`)
+- [x] Pump loop is structured so tray-icon + global-hotkey event delivery (both require a pump on their owning thread) can attach
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
@@ -393,9 +393,9 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux full Build gate
-- [ ] Fixed binding `Ctrl+Alt+Space`, no rebind UI (assumption; "n" confirmed)
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux full Build gate
+- [x] Fixed binding `Ctrl+Alt+Space`, no rebind UI (assumption; "n" confirmed)
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
@@ -419,10 +419,10 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
-- [ ] Tooltip states wired to `ui_tooltip` (Recording…/Processing…), balloon bodies wired to `notice_text` (CLI-17/18 strings)
-- [ ] Menu model maps "Sair" → `UiEvent::Quit`, "Parar gravação" → stop-recording event
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT; Win11 balloon-suppression risk documented in design)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
+- [x] Tooltip states wired to `ui_tooltip` (Recording…/Processing…), balloon bodies wired to `notice_text` (CLI-17/18 strings)
+- [x] Menu model maps "Sair" → `UiEvent::Quit`, "Parar gravação" → stop-recording event
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT; Win11 balloon-suppression risk documented in design)
 
 **Tests**: none
 **Gate**: build
@@ -446,10 +446,10 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
-- [ ] 16 kHz mono preferred; device-default fallback paths compile (true-rate WAV header)
-- [ ] 300s cap route emits `RecordingDone` exactly like a manual stop (CLI-10); empty capture routes to `RecordingDone(Err)` (CLI-09)
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
+- [x] 16 kHz mono preferred; device-default fallback paths compile (true-rate WAV header)
+- [x] 300s cap route emits `RecordingDone` exactly like a manual stop (CLI-10); empty capture routes to `RecordingDone(Err)` (CLI-09)
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
@@ -473,9 +473,9 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
-- [ ] Sink adapter implements `ClipboardSink::set` and maps `arboard::Error` to `ClipError`
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
+- [x] Sink adapter implements `ClipboardSink::set` and maps `arboard::Error` to `ClipError`
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
@@ -499,11 +499,11 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
-- [ ] Hotkey while Recording triggers stop → worker request; `Successful` outcome writes clipboard (3×50ms retry) + Success balloon; any error → Error balloon only (CLI-13/14/17/18)
-- [ ] Main loop never blocks on the network (request runs on `spawn_processing` thread) - CLI-05
-- [ ] "Sair" (and EDT registration failure) → clean exit
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
+- [x] Hotkey while Recording triggers stop → worker request; `Successful` outcome writes clipboard (3×50ms retry) + Success balloon; any error → Error balloon only (CLI-13/14/17/18)
+- [x] Main loop never blocks on the network (request runs on `spawn_processing` thread) - CLI-05
+- [x] "Sair" (and EDT registration failure) → clean exit
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
@@ -527,9 +527,9 @@ T15 → T16
 
 **Done when**:
 
-- [ ] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
-- [ ] `glue::run()` delegates to `app_loop::run`; `main.rs` dispatches on platform
-- [ ] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
+- [x] Cross-target build gate passes: `cargo check --target x86_64-pc-windows-gnu` + Linux Full gate
+- [x] `glue::run()` delegates to `app_loop::run`; `main.rs` dispatches on platform
+- [x] Test count: 0 runtime tests on Linux (type-check + manual UAT per AD-010)
 
 **Tests**: none
 **Gate**: build
