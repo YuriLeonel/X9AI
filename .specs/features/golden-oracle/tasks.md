@@ -136,6 +136,8 @@ T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8
 
 **Commit**: `feat(server): add oracle semantic scoring core`
 
+**Status**: ✅ Done
+
 ---
 
 ### T4: Add structural and keyword checks

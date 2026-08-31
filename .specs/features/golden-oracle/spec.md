@@ -183,8 +183,8 @@ scoring functions produce byte-identical reports across two runs.
 | -------------- | ----- | ----- | ------ |
 | GO-01 | P1: Semantic similarity | Design | Pending |
 | GO-02 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-03 | P1: Semantic similarity | Design | Pending |
-| GO-04 | P1: Semantic similarity | Design | Pending |
+| GO-03 | P1: Semantic similarity | In Tasks | In Tasks |
+| GO-04 | P1: Semantic similarity | In Tasks | In Tasks |
 | GO-05 | P1: Semantic similarity | Design | Pending |
 | GO-06 | P1: Structural checks | Design | Pending |
 | GO-07 | P1: Structural checks | Design | Pending |
