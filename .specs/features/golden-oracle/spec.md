@@ -182,7 +182,7 @@ scoring functions produce byte-identical reports across two runs.
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
 | GO-01 | P1: Semantic similarity | Design | Pending |
-| GO-02 | P1: Semantic similarity | Design | Pending |
+| GO-02 | P1: Semantic similarity | In Tasks | In Tasks |
 | GO-03 | P1: Semantic similarity | Design | Pending |
 | GO-04 | P1: Semantic similarity | Design | Pending |
 | GO-05 | P1: Semantic similarity | Design | Pending |
