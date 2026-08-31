@@ -29,3 +29,40 @@ def test_from_env_falls_back_when_unset(monkeypatch: pytest.MonkeyPatch) -> None
 def test_settings_are_immutable() -> None:
     with pytest.raises(FrozenInstanceError):
         Settings().max_audio_bytes = 1  # type: ignore[misc]
+
+
+def test_default_whisper_model_is_medium() -> None:
+    settings = Settings()
+    assert settings.whisper_model == "medium"
+    assert settings.whisper_device == "auto"
+    assert settings.whisper_compute_type == "default"
+
+
+def test_from_env_reads_whisper_overrides(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("WHISPER_MODEL", "small")
+    monkeypatch.setenv("WHISPER_DEVICE", "cpu")
+    monkeypatch.setenv("WHISPER_COMPUTE_TYPE", "int8")
+    settings = Settings.from_env()
+    assert settings.whisper_model == "small"
+    assert settings.whisper_device == "cpu"
+    assert settings.whisper_compute_type == "int8"
+
+
+def test_from_env_falls_back_when_whisper_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("WHISPER_MODEL", raising=False)
+    monkeypatch.delenv("WHISPER_DEVICE", raising=False)
+    monkeypatch.delenv("WHISPER_COMPUTE_TYPE", raising=False)
+    settings = Settings.from_env()
+    assert settings.whisper_model == "medium"
+    assert settings.whisper_device == "auto"
+    assert settings.whisper_compute_type == "default"
+
+
+def test_from_env_falls_back_on_blank_whisper_values(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("WHISPER_MODEL", "")
+    monkeypatch.setenv("WHISPER_DEVICE", "   ")
+    monkeypatch.setenv("WHISPER_COMPUTE_TYPE", "")
+    settings = Settings.from_env()
+    assert settings.whisper_model == "medium"
+    assert settings.whisper_device == "auto"
+    assert settings.whisper_compute_type == "default"
