@@ -61,6 +61,51 @@ pub trait Processor {
     fn process(&self, wav: Vec<u8>, metadata: &str) -> Result<String, ProcError>;
 }
 
+const REQUEST_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
+
+/// Default `/process` client: blocking multipart POST over `reqwest`.
+pub struct ReqwestProcessor {
+    client: reqwest::blocking::Client,
+    base_url: String,
+}
+
+impl ReqwestProcessor {
+    pub fn new(base_url: String) -> Result<Self, ProcError> {
+        let client = reqwest::blocking::Client::builder()
+            .timeout(REQUEST_TIMEOUT)
+            .build()
+            .map_err(|e| ProcError::Transport(e.to_string()))?;
+        Ok(Self { client, base_url })
+    }
+}
+
+impl Processor for ReqwestProcessor {
+    /// POSTs `wav` + `metadata` as multipart fields to `{base}/process`
+    /// (CLI-11) and maps the outcome per the server contract (CLI-13/14).
+    fn process(&self, wav: Vec<u8>, metadata: &str) -> Result<String, ProcError> {
+        let form = reqwest::blocking::multipart::Form::new()
+            .part("audio_file", reqwest::blocking::multipart::Part::bytes(wav))
+            .text("metadata", metadata.to_string());
+
+        let response = self
+            .client
+            .post(format!("{}/process", self.base_url))
+            .multipart(form)
+            .send()
+            .map_err(|e| ProcError::Transport(e.to_string()))?;
+
+        let status = response.status();
+        let bytes = response
+            .bytes()
+            .map_err(|e| ProcError::Transport(e.to_string()))?;
+
+        if !status.is_success() {
+            return Err(ProcError::Non2xx(status.as_u16()));
+        }
+        parse_response(&bytes)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
