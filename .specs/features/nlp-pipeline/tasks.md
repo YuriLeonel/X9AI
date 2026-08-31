@@ -61,10 +61,10 @@ T4
 
 ### Phase 3: Integration
 
-`create_app` adopts the real pipeline as its default.
+`create_app` adopts the real pipeline as its default, then its composition is pinned.
 
 ```
-T5
+T5 → T6
 ```
 
 ---
@@ -248,6 +248,7 @@ T1 → T3
 T2 → T4
 T3 → T4
 T4 → T5
+T5 → T6
 ```
 
 Execution is strictly sequential - there is no intra-phase parallelism.
@@ -263,6 +264,7 @@ Execution is strictly sequential - there is no intra-phase parallelism.
 | T3: transcriber + pyproject extra | 2 files / 1 concern (same feature subsystem) | ✅ Granular |
 | T4: composed RealPipeline | 1 file (extend) / 1 concern | ✅ Granular |
 | T5: create_app default | 1 file (modify) / 1 concern | ✅ Granular |
+| T6: pin default composition (fix) | 1 test file / 1 concern | ✅ Granular |
 
 ## Diagram-Definition Cross-Check
 
@@ -273,6 +275,7 @@ Execution is strictly sequential - there is no intra-phase parallelism.
 | T3 | T1 | T1 → T3 | ✅ Match |
 | T4 | T2, T3 | T2/T3 → T4 | ✅ Match |
 | T5 | T4 | T4 → T5 | ✅ Match |
+| T6 | T5 | T5 → T6 | ✅ Match |
 
 No dependency points forward to a later phase.
 
