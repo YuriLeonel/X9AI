@@ -1,10 +1,14 @@
-"""Unit tests for the oracle corpus loader and runner (GO-09..16)."""
+"""Unit and integration tests for the oracle corpus loader, runner, and CLI (GO-09..16)."""
 
 import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
-from x9ai.oracle import CorpusError, Entry, load_corpus, run_corpus
+from x9ai.oracle import CorpusError, Entry, load_corpus, main, run_corpus
 
 
 def _write_manifest(corpus_dir, entries) -> None:
@@ -165,3 +169,86 @@ def test_run_is_deterministic_with_injected_fakes(tmp_path) -> None:
     first = run_corpus(entries, _FakePipeline(), embedder)
     second = run_corpus(entries, _FakePipeline(), embedder)
     assert first == second
+
+
+def _corpus_dir(tmp_path, entry_ids) -> Path:
+    for entry_id in entry_ids:
+        (tmp_path / f"{entry_id}.wav").write_bytes(b"\x00")
+    _write_manifest(
+        tmp_path,
+        [
+            {"id": entry_id, "audio": f"{entry_id}.wav", "golden": "O aniversário foi ontem."}
+            for entry_id in entry_ids
+        ],
+    )
+    return tmp_path
+
+
+def test_cli_exits_zero_on_passing_corpus(tmp_path, capsys) -> None:
+    corpus = _corpus_dir(tmp_path, ["a", "b"])
+    code = main(
+        ["run", str(corpus)],
+        pipeline=_FakePipeline(),
+        embedder=_FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]}),
+    )
+    captured = capsys.readouterr()
+    assert code == 0
+    assert "[PASS] a" in captured.out
+    assert "[PASS] b" in captured.out
+    assert "similarity=1.000" in captured.out
+    assert "structural=ok keywords=ok" in captured.out
+    assert "CORPUS: PASS" in captured.out
+
+
+def test_cli_exits_one_on_failing_entry(tmp_path, capsys) -> None:
+    (tmp_path / "bad.wav").write_bytes(b"boom")
+    _write_manifest(
+        tmp_path, [{"id": "bad", "audio": "bad.wav", "golden": "O aniversário foi ontem."}]
+    )
+    code = main(
+        ["run", str(tmp_path)],
+        pipeline=_FakePipeline(),
+        embedder=_FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]}),
+    )
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "[FAIL] bad" in captured.out
+    assert "CORPUS: FAIL" in captured.out
+
+
+def test_cli_exits_two_on_missing_manifest(tmp_path, capsys) -> None:
+    code = main(["run", str(tmp_path)])
+    captured = capsys.readouterr()
+    assert code == 2
+    assert "golden.json" in captured.err
+
+
+class _RaisingEmbedder:
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        raise ImportError("No module named 'sentence_transformers'")
+
+
+def test_cli_exits_two_when_embedding_extra_missing(tmp_path, capsys) -> None:
+    corpus = _corpus_dir(tmp_path, ["a"])
+    code = main(
+        ["run", str(corpus)],
+        pipeline=_FakePipeline(),
+        embedder=_RaisingEmbedder(),
+    )
+    captured = capsys.readouterr()
+    assert code == 2
+    assert "oracle" in captured.err
+
+
+def test_cli_module_invokable_and_verdict_bound_offline(tmp_path) -> None:
+    corpus = _corpus_dir(tmp_path, ["a"])
+    env = {**os.environ, "PYTHONPATH": str(Path(__file__).resolve().parents[1])}
+    proc = subprocess.run(
+        [sys.executable, "-m", "x9ai.oracle", "run", str(corpus)],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert proc.returncode == 1
+    assert "CORPUS: FAIL" in proc.stdout

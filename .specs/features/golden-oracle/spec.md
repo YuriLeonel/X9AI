@@ -195,10 +195,10 @@ scoring functions produce byte-identical reports across two runs.
 | GO-12 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-13 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-14 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-15 | P1: Corpus runner | Design | Pending |
+| GO-15 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-16 | P1: Mock mode | In Tasks | In Tasks |
 
-**Coverage:** 16 total, 0 mapped to tasks, 16 unmapped ⚠️
+**Coverage:** 16 total, 16 mapped to tasks, 0 unmapped
 
 ---
 

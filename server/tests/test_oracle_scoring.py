@@ -126,7 +126,7 @@ def test_score_passes_at_threshold_boundary_and_fails_below() -> None:
 
 
 def test_score_similarity_is_one_for_identical_texts() -> None:
-    embedder = _FakeEmbedder({"golden": [1.0, 2.0], "golden": [1.0, 2.0]})
+    embedder = _FakeEmbedder({"golden": [1.0, 2.0]})
     result = score("golden", "golden", embedder)
     assert result.similarity == pytest.approx(1.0)
     assert result.semantic_passed is True

@@ -7,9 +7,11 @@ The embedding provider is lazy (AD-011 pattern): importing this module never req
 sentence-transformers; only an actual encode call does.
 """
 
+import argparse
 import json
 import math
 import re
+import sys
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,13 +19,14 @@ from typing import Protocol
 
 from x9ai.config import Settings
 from x9ai.normalizer import RuleBasedNormalizer
-from x9ai.pipeline import Pipeline
+from x9ai.pipeline import Pipeline, RealPipeline
+from x9ai.transcriber import WhisperTranscriber
 
 SIMILARITY_THRESHOLD = 0.90
 
 _SENTENCE_RE = re.compile(r"[^.!?]+[.!?]")
 _FILLERS_RE = re.compile(
-    r"\b(?:%s)\b" % "|".join(re.escape(filler) for filler in RuleBasedNormalizer.FILLERS),
+    r"\b(?:{})\b".format("|".join(re.escape(filler) for filler in RuleBasedNormalizer.FILLERS)),
     re.IGNORECASE,
 )
 _ENDING_PUNCTUATION = (".", "!", "?")
@@ -246,7 +249,7 @@ def _run_entry(entry: Entry, pipeline: Pipeline, embedder: EmbeddingProvider) ->
         return EntryOutcome(entry_id=entry.id, passed=False, error=str(exc))
     try:
         output = pipeline.process(audio_bytes, entry.language)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - any pipeline failure is a per-entry FAILED
         return EntryOutcome(entry_id=entry.id, passed=False, error=str(exc))
     if not output.strip():
         return EntryOutcome(entry_id=entry.id, passed=False, error="empty output")
@@ -258,3 +261,57 @@ def _run_entry(entry: Entry, pipeline: Pipeline, embedder: EmbeddingProvider) ->
         structural=result.structural,
         keywords_passed=result.keywords_passed,
     )
+
+
+def main(
+    argv: list[str] | None = None,
+    *,
+    pipeline: Pipeline | None = None,
+    embedder: EmbeddingProvider | None = None,
+) -> int:
+    """CLI entry point. Real defaults come from `Settings.from_env()`; injectable seams
+    let gates drive the full flow offline (GO-15). Returns 0 pass, 1 fail, 2 abort."""
+    parser = argparse.ArgumentParser(
+        prog="x9ai.oracle",
+        description="Golden-transcript oracle harness (docs/spec.md §9).",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    run_parser = subparsers.add_parser("run", help="score a corpus directory")
+    run_parser.add_argument("corpus_dir", help="directory containing golden.json and audio clips")
+    args = parser.parse_args(argv)
+
+    if args.command != "run":
+        parser.error(f"unknown command: {args.command}")
+    try:
+        entries = load_corpus(args.corpus_dir)
+    except CorpusError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    settings = Settings.from_env()
+    used_pipeline = pipeline or RealPipeline(WhisperTranscriber(settings), RuleBasedNormalizer())
+    used_embedder = embedder or SemanticEmbedder(settings)
+    try:
+        report = run_corpus(entries, used_pipeline, used_embedder)
+    except ImportError as exc:
+        print(
+            f"error: {exc} (install the extras: x9ai-server[whisper,oracle])",
+            file=sys.stderr,
+        )
+        return 2
+
+    for outcome in report.outcomes:
+        verdict = "PASS" if outcome.passed else "FAIL"
+        similarity = f"{outcome.similarity:.3f}" if outcome.similarity is not None else "n/a"
+        structural = "ok" if outcome.structural is not None and outcome.structural.passed else "fail"
+        keywords = "ok" if outcome.keywords_passed else "fail"
+        line = f"[{verdict}] {outcome.entry_id} similarity={similarity} structural={structural} keywords={keywords}"
+        if outcome.error:
+            line += f" error={outcome.error}"
+        print(line)
+    print(f"CORPUS: {'PASS' if report.passed else 'FAIL'}")
+    return 0 if report.passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
