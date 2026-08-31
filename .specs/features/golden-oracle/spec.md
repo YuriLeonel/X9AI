@@ -181,22 +181,22 @@ scoring functions produce byte-identical reports across two runs.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| GO-01 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-02 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-03 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-04 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-05 | P1: Semantic similarity | In Tasks | In Tasks |
-| GO-06 | P1: Structural checks | In Tasks | In Tasks |
-| GO-07 | P1: Structural checks | In Tasks | In Tasks |
-| GO-08 | P1: Structural checks | In Tasks | In Tasks |
-| GO-09 | P1: Structural checks | In Tasks | In Tasks |
-| GO-10 | P1: Keyword presence | In Tasks | In Tasks |
-| GO-11 | P1: Keyword presence | In Tasks | In Tasks |
-| GO-12 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-13 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-14 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-15 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-16 | P1: Mock mode | In Tasks | In Tasks |
+| GO-01 | P1: Semantic similarity | ✅ Verified | ✅ Verified |
+| GO-02 | P1: Semantic similarity | ✅ Verified | ✅ Verified |
+| GO-03 | P1: Semantic similarity | ✅ Verified | ✅ Verified |
+| GO-04 | P1: Semantic similarity | ✅ Verified | ✅ Verified |
+| GO-05 | P1: Semantic similarity | ✅ Verified | ✅ Verified |
+| GO-06 | P1: Structural checks | ✅ Verified | ✅ Verified |
+| GO-07 | P1: Structural checks | ✅ Verified | ✅ Verified |
+| GO-08 | P1: Structural checks | ✅ Verified | ✅ Verified |
+| GO-09 | P1: Structural checks | ✅ Verified | ✅ Verified |
+| GO-10 | P1: Keyword presence | ✅ Verified | ✅ Verified |
+| GO-11 | P1: Keyword presence | ✅ Verified | ✅ Verified |
+| GO-12 | P1: Corpus runner | ✅ Verified | ✅ Verified |
+| GO-13 | P1: Corpus runner | ✅ Verified | ✅ Verified |
+| GO-14 | P1: Corpus runner | ✅ Verified | ✅ Verified |
+| GO-15 | P1: Corpus runner | ✅ Verified | ✅ Verified |
+| GO-16 | P1: Mock mode | ✅ Verified | ✅ Verified |
 
 **Coverage:** 16 total, 16 mapped to tasks, 0 unmapped
 
@@ -204,7 +204,7 @@ scoring functions produce byte-identical reports across two runs.
 
 ## Success Criteria
 
-- [ ] Corpus runner, invoked with injected mocks, produces a per-entry report and a byte-identical re-run (deterministic, offline — mock mode)
-- [ ] A corpus whose entries all meet ≥ 0.90 similarity + structural + keyword checks reports PASSED and exits zero; introducing one failing entry flips both
-- [ ] Semantic scoring module imports without `[oracle]`; only encode calls raise (lazy import)
-- [ ] Filler blacklist is sourced from `RuleBasedNormalizer.FILLERS`, not duplicated
+- [x] Corpus runner, invoked with injected mocks, produces a per-entry report and a byte-identical re-run (deterministic, offline — mock mode)
+- [x] A corpus whose entries all meet ≥ 0.90 similarity + structural + keyword checks reports PASSED and exits zero; introducing one failing entry flips both
+- [x] Semantic scoring module imports without `[oracle]`; only encode calls raise (lazy import)
+- [x] Filler blacklist is sourced from `RuleBasedNormalizer.FILLERS`, not duplicated
