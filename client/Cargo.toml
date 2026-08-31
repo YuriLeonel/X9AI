@@ -22,7 +22,7 @@ tray-icon = "0.19"
 global-hotkey = "0.6"
 cpal = "0.15"
 arboard = "3.4"
-windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_UI_Shell"] }
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_UI_Shell", "Win32_System_LibraryLoader"] }
 
 [profile.release]
 strip = true

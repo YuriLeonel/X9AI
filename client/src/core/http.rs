@@ -64,6 +64,7 @@ pub trait Processor {
 const REQUEST_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
 
 /// Default `/process` client: blocking multipart POST over `reqwest`.
+#[derive(Clone)]
 pub struct ReqwestProcessor {
     client: reqwest::blocking::Client,
     base_url: String,
