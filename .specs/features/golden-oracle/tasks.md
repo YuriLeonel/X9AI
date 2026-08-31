@@ -106,6 +106,8 @@ T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8
 
 **Commit**: `build(server): add oracle extra for sentence-transformers`
 
+**Status**: ✅ Done
+
 ---
 
 ### T3: Add semantic scoring core
