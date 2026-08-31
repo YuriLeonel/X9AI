@@ -30,14 +30,14 @@ Features (each: Specify → Design → Tasks → Execute → Verifier → merge 
 
 1. `server-api` ✅ DONE — FastAPI `POST /process` HTTP boundary, JSON contract, error mapping, pipeline seam (stub), logs/timing; validated PASS (11/11 ACs, 31 tests, 3/3 sensor killed). (`docs/spec.md` §6, §4.1)
 2. `nlp-pipeline` ✅ DONE — faster-whisper transcription + rule-based PT-BR normalization wired into the seam; injectable stub for gates. Validated PASS (14/14 ACs, 60 tests, 4/4 sensor killed). Merged to `main` (66c537d, PR #1). (§5)
-3. `golden-oracle` ✅ DONE — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. Validated PASS (16/16 ACs, 97 tests, 3/3 sensor killed). Ready for review on `feature/golden-oracle` → `main` PR. (§9)
+3. `golden-oracle` ✅ DONE — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. Validated PASS (16/16 ACs, 97 tests, 3/3 sensor killed). Merged to `main` (fd15708 via 6303183, PR #2). (§9)
 4. `client` — Rust client: core (state machine, clipboard retry 3×50ms, HTTP client, parsing; tested on Linux) + cfg-gated Windows glue. (§3.1, §4, §7)
 
 Execute order is dependency-safe: each branch starts from `main` after its dependency is merged.
 
 ## Handoff
 
-- `server-api` and `nlp-pipeline` both merged to `main` (66c537d). 60 passing tests at `server/.venv` before `golden-oracle`.
-- Current state: branch `feature/golden-oracle` — `golden-oracle` implemented and verified (16/16 ACs, 97 tests, 3/3 sensor killed). Validation: `.specs/features/golden-oracle/validation.md`. Awaiting PR `feature/golden-oracle` → `main` (do not merge without explicit go-ahead).
-- Next pending roadmap item after `golden-oracle`: `client` (Rust). (§3.1, §4, §7)
+- `server-api` and `nlp-pipeline` and `golden-oracle` all merged to `main` (66c537d, fd15708). 97 passing tests at `server/.venv`.
+- Current state: branch `main`, clean. Next pending roadmap item: `client` (Rust). (§3.1, §4, §7)
+- Pre-UAT step recorded in the §9 evidence review: capture real PT-BR clips and run `python -m x9ai.oracle run <corpus>` with `[whisper,oracle]` installed before claiming a live v1 PASS.
 - Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.
