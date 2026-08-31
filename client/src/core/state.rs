@@ -1,3 +1,5 @@
+use crate::core::notify::Notice;
+
 pub type RecError = String;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -11,13 +13,6 @@ pub enum State {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProcessOutcome {
     Success { text: String },
-    Error,
-}
-
-/// Final user notice classification (Success/Error toast).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Notice {
-    Success,
     Error,
 }
 
@@ -35,10 +30,18 @@ pub enum Trigger {
 /// "stop the recorder, do not send an HTTP request yet".
 #[derive(Debug)]
 pub enum Effect {
+    /// Start capturing (recorder, `Idle + Hotkey`).
     BeginRecording,
-    StopAndProcess { wav: Vec<u8>, timestamp: u64 },
+    /// Stop the recorder and send the capture to `/process`; empty `wav` means
+    /// "commit requested, bytes arrive via a later `RecordingDone`".
+    StopAndProcess {
+        wav: Vec<u8>,
+        timestamp: u64,
+    },
     Ignore,
-    WriteClipboard { text: String },
+    WriteClipboard {
+        text: String,
+    },
     Notify(Notice),
     RenderTooltip(&'static str),
     Quit,
