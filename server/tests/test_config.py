@@ -66,3 +66,17 @@ def test_from_env_falls_back_on_blank_whisper_values(monkeypatch: pytest.MonkeyP
     assert settings.whisper_model == "medium"
     assert settings.whisper_device == "auto"
     assert settings.whisper_compute_type == "default"
+
+
+def test_default_embedding_model_is_multilingual_minilm() -> None:
+    assert Settings().embedding_model == "paraphrase-multilingual-MiniLM-L12-v2"
+
+
+def test_from_env_reads_embedding_model_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ORACLE_EMBEDDING_MODEL", "another-model")
+    assert Settings.from_env().embedding_model == "another-model"
+
+
+def test_from_env_falls_back_when_embedding_model_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ORACLE_EMBEDDING_MODEL", raising=False)
+    assert Settings.from_env().embedding_model == "paraphrase-multilingual-MiniLM-L12-v2"

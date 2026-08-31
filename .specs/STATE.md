@@ -29,15 +29,15 @@ Projects/commits must reference these IDs and update this log when a decision is
 Features (each: Specify → Design → Tasks → Execute → Verifier → merge to `main`):
 
 1. `server-api` ✅ DONE — FastAPI `POST /process` HTTP boundary, JSON contract, error mapping, pipeline seam (stub), logs/timing; validated PASS (11/11 ACs, 31 tests, 3/3 sensor killed). (`docs/spec.md` §6, §4.1)
-2. `nlp-pipeline` ✅ DONE (PR open awaiting review) — faster-whisper transcription + rule-based PT-BR normalization wired into the seam; injectable stub for gates. Validated PASS (14/14 ACs, 60 tests, 4/4 sensor killed). Branch `feature/nlp-pipeline`, not yet merged. (§5)
-3. `golden-oracle` — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. (§9)
+2. `nlp-pipeline` ✅ DONE — faster-whisper transcription + rule-based PT-BR normalization wired into the seam; injectable stub for gates. Validated PASS (14/14 ACs, 60 tests, 4/4 sensor killed). Merged to `main` (66c537d, PR #1). (§5)
+3. `golden-oracle` ✅ DONE — oracle harness: ≥90% semantic similarity, structural checks, filler blacklist, keyword presence, corpus runner with mock mode. Validated PASS (16/16 ACs, 97 tests, 3/3 sensor killed). Ready for review on `feature/golden-oracle` → `main` PR. (§9)
 4. `client` — Rust client: core (state machine, clipboard retry 3×50ms, HTTP client, parsing; tested on Linux) + cfg-gated Windows glue. (§3.1, §4, §7)
 
 Execute order is dependency-safe: each branch starts from `main` after its dependency is merged.
 
 ## Handoff
 
-- Current state: `nlp-pipeline` feature complete on branch `feature/nlp-pipeline` — validated PASS (Verifier, `validation.md`), all 14 ACs NLP-01..14 traced to tests and marked Verified. Server package gained `x9ai/normalizer.py` (rule-based PT-BR pass), `x9ai/transcriber.py` (lazy faster-whisper), `RealPipeline` composition, whisper settings; `create_app` default is the real pipeline. 60 passing tests at `server/.venv`. PR opened for review, NOT merged to `main` per session goal.
-- Next on merge: `golden-oracle` feature (Specify → Design → Tasks → Execute): oracle harness for ≥90% semantic similarity + structural checks + filler blacklist + keyword presence, corpus runner with mock mode. It reuses `RuleBasedNormalizer` and drives `RealPipeline` directly. §9.
-- Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.
+- `server-api` and `nlp-pipeline` both merged to `main` (66c537d). 60 passing tests at `server/.venv` before `golden-oracle`.
+- Current state: branch `feature/golden-oracle` — `golden-oracle` implemented and verified (16/16 ACs, 97 tests, 3/3 sensor killed). Validation: `.specs/features/golden-oracle/validation.md`. Awaiting PR `feature/golden-oracle` → `main` (do not merge without explicit go-ahead).
+- Next pending roadmap item after `golden-oracle`: `client` (Rust). (§3.1, §4, §7)
 - Reconcile this snapshot against git `status` and `tasks.md` on resume — evidence wins over a stale snapshot.

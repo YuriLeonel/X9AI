@@ -7,6 +7,7 @@ MAX_AUDIO_BYTES_DEFAULT = 50 * 1024 * 1024
 WHISPER_MODEL_DEFAULT = "medium"
 WHISPER_DEVICE_DEFAULT = "auto"
 WHISPER_COMPUTE_TYPE_DEFAULT = "default"
+ORACLE_EMBEDDING_MODEL_DEFAULT = "paraphrase-multilingual-MiniLM-L12-v2"
 
 
 def _env_str(name: str, default: str) -> str:
@@ -20,6 +21,7 @@ class Settings:
     whisper_model: str = WHISPER_MODEL_DEFAULT
     whisper_device: str = WHISPER_DEVICE_DEFAULT
     whisper_compute_type: str = WHISPER_COMPUTE_TYPE_DEFAULT
+    embedding_model: str = ORACLE_EMBEDDING_MODEL_DEFAULT
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -33,4 +35,5 @@ class Settings:
             whisper_model=_env_str("WHISPER_MODEL", WHISPER_MODEL_DEFAULT),
             whisper_device=_env_str("WHISPER_DEVICE", WHISPER_DEVICE_DEFAULT),
             whisper_compute_type=_env_str("WHISPER_COMPUTE_TYPE", WHISPER_COMPUTE_TYPE_DEFAULT),
+            embedding_model=_env_str("ORACLE_EMBEDDING_MODEL", ORACLE_EMBEDDING_MODEL_DEFAULT),
         )
