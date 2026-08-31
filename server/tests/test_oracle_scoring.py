@@ -1,9 +1,11 @@
 """Unit tests for the oracle semantic scoring core (GO-01..04)."""
 
+import math
+
 import pytest
 
 from x9ai.config import Settings
-from x9ai.oracle import SemanticEmbedder, cosine, keywords_present, structural_check
+from x9ai.oracle import SemanticEmbedder, cosine, keywords_present, score, structural_check
 
 
 class _FakeModel:
@@ -97,3 +99,53 @@ def test_keywords_match_case_insensitive_substring_and_empty_passes() -> None:
     assert keywords_present(["PARQUE"], "O aniversário foi no parque.") is True
     assert keywords_present(["aniversário"], "Os aniversários foram ontem.") is True
     assert keywords_present([], "Qualquer texto.") is True
+
+
+class _FakeEmbedder:
+    def __init__(self, vectors: dict[str, list[float]]) -> None:
+        self._vectors = vectors
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        return [self._vectors[text] for text in texts]
+
+
+def test_score_passes_at_threshold_boundary_and_fails_below() -> None:
+    embedder = _FakeEmbedder(
+        {
+            "golden": [1.0, 0.0, 0.0],
+            "at": [0.9, math.sqrt(0.19), 0.0],
+            "below": [0.8, 0.6, 0.0],
+        }
+    )
+    at = score("golden", "at", embedder)
+    below = score("golden", "below", embedder)
+    assert at.similarity == pytest.approx(0.90)
+    assert at.semantic_passed is True
+    assert below.similarity == pytest.approx(0.80)
+    assert below.semantic_passed is False
+
+
+def test_score_similarity_is_one_for_identical_texts() -> None:
+    embedder = _FakeEmbedder({"golden": [1.0, 2.0], "golden": [1.0, 2.0]})
+    result = score("golden", "golden", embedder)
+    assert result.similarity == pytest.approx(1.0)
+    assert result.semantic_passed is True
+
+
+def test_score_result_passed_requires_all_checks() -> None:
+    embedder = _FakeEmbedder(
+        {
+            "golden": [1.0, 0.0],
+            "O aniversário foi ontem.": [1.0, 0.0],
+            "O tipo é bom.": [1.0, 0.0],
+        }
+    )
+    clean = score("golden", "O aniversário foi ontem.", embedder)
+    assert clean.semantic_passed is True
+    assert clean.passed is True
+    filler = score("golden", "O tipo é bom.", embedder)
+    assert filler.semantic_passed is True
+    assert filler.passed is False
+    missing = score("golden", "O aniversário foi ontem.", embedder, keywords=["praia"])
+    assert missing.keywords_passed is False
+    assert missing.passed is False

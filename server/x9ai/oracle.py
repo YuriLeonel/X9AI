@@ -102,3 +102,35 @@ def keywords_present(keywords: Sequence[str], output: str) -> bool:
     matching (GO-10); an empty keyword list always passes (GO-11)."""
     lowered = output.lower()
     return all(keyword.lower() in lowered for keyword in keywords)
+
+
+@dataclass(frozen=True)
+class ScoreResult:
+    """Conjunction of every §9 check for one pipeline output."""
+
+    similarity: float
+    semantic_passed: bool
+    structural: StructuralOutcome
+    keywords_passed: bool
+
+    @property
+    def passed(self) -> bool:
+        return self.semantic_passed and self.structural.passed and self.keywords_passed
+
+
+def score(
+    golden: str,
+    output: str,
+    embedder: EmbeddingProvider,
+    keywords: Sequence[str] = (),
+) -> ScoreResult:
+    """Score pipeline output against golden text: cosine similarity (≥0.90), structural
+    checks, and declared-keyword presence."""
+    golden_vec, output_vec = embedder.encode([golden, output])
+    similarity = cosine(golden_vec, output_vec)
+    return ScoreResult(
+        similarity=similarity,
+        semantic_passed=similarity >= SIMILARITY_THRESHOLD,
+        structural=structural_check(output),
+        keywords_passed=keywords_present(keywords, output),
+    )

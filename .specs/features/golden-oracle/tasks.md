@@ -195,6 +195,8 @@ T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8
 
 **Commit**: `feat(server): add oracle semantic score composition`
 
+**Status**: ✅ Done
+
 ---
 
 ### T6: Add corpus loader
