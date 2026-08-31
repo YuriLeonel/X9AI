@@ -17,6 +17,7 @@ from typing import Protocol
 
 from x9ai.config import Settings
 from x9ai.normalizer import RuleBasedNormalizer
+from x9ai.pipeline import Pipeline
 
 SIMILARITY_THRESHOLD = 0.90
 
@@ -201,3 +202,59 @@ def load_corpus(corpus_dir: str | Path) -> list[Entry]:
             )
         )
     return loaded
+
+
+@dataclass(frozen=True)
+class EntryOutcome:
+    """Per-entry run result. `passed` is the conjunction of every applicable check."""
+
+    entry_id: str
+    passed: bool
+    similarity: float | None = None
+    structural: StructuralOutcome | None = None
+    keywords_passed: bool | None = None
+    error: str | None = None
+
+
+@dataclass(frozen=True)
+class CorpusReport:
+    """The full run: one outcome per entry, plus the corpus-wide verdict."""
+
+    outcomes: tuple[EntryOutcome, ...]
+
+    @property
+    def passed(self) -> bool:
+        return all(outcome.passed for outcome in self.outcomes)
+
+
+def run_corpus(
+    entries: Sequence[Entry],
+    pipeline: Pipeline,
+    embedder: EmbeddingProvider,
+) -> CorpusReport:
+    """Process every entry through the pipeline, score each output, and report."""
+    outcomes = tuple(_run_entry(entry, pipeline, embedder) for entry in entries)
+    return CorpusReport(outcomes=outcomes)
+
+
+def _run_entry(entry: Entry, pipeline: Pipeline, embedder: EmbeddingProvider) -> EntryOutcome:
+    if not entry.audio.is_file():
+        return EntryOutcome(entry_id=entry.id, passed=False, error=f"audio file not found: {entry.audio}")
+    try:
+        audio_bytes = entry.audio.read_bytes()
+    except OSError as exc:
+        return EntryOutcome(entry_id=entry.id, passed=False, error=str(exc))
+    try:
+        output = pipeline.process(audio_bytes, entry.language)
+    except Exception as exc:
+        return EntryOutcome(entry_id=entry.id, passed=False, error=str(exc))
+    if not output.strip():
+        return EntryOutcome(entry_id=entry.id, passed=False, error="empty output")
+    result = score(entry.golden, output, embedder, entry.keywords)
+    return EntryOutcome(
+        entry_id=entry.id,
+        passed=result.passed,
+        similarity=result.similarity,
+        structural=result.structural,
+        keywords_passed=result.keywords_passed,
+    )

@@ -189,14 +189,14 @@ scoring functions produce byte-identical reports across two runs.
 | GO-06 | P1: Structural checks | In Tasks | In Tasks |
 | GO-07 | P1: Structural checks | In Tasks | In Tasks |
 | GO-08 | P1: Structural checks | In Tasks | In Tasks |
-| GO-09 | P1: Structural checks | Design | Pending |
+| GO-09 | P1: Structural checks | In Tasks | In Tasks |
 | GO-10 | P1: Keyword presence | In Tasks | In Tasks |
 | GO-11 | P1: Keyword presence | In Tasks | In Tasks |
 | GO-12 | P1: Corpus runner | In Tasks | In Tasks |
-| GO-13 | P1: Corpus runner | Design | Pending |
+| GO-13 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-14 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-15 | P1: Corpus runner | Design | Pending |
-| GO-16 | P1: Mock mode | Design | Pending |
+| GO-16 | P1: Mock mode | In Tasks | In Tasks |
 
 **Coverage:** 16 total, 0 mapped to tasks, 16 unmapped ⚠️
 

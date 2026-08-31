@@ -1,10 +1,10 @@
-"""Unit tests for the oracle corpus loader (GO-12)."""
+"""Unit tests for the oracle corpus loader and runner (GO-09..16)."""
 
 import json
 
 import pytest
 
-from x9ai.oracle import CorpusError, load_corpus
+from x9ai.oracle import CorpusError, Entry, load_corpus, run_corpus
 
 
 def _write_manifest(corpus_dir, entries) -> None:
@@ -64,3 +64,104 @@ def test_missing_required_field_and_empty_entries_raise(tmp_path) -> None:
     _write_manifest(tmp_path, [])
     with pytest.raises(CorpusError, match="non-empty"):
         load_corpus(tmp_path)
+
+
+class _FakePipeline:
+    def process(self, audio: bytes, language: str) -> str:
+        if audio == b"boom":
+            raise RuntimeError("transcriber exploded")
+        if audio == b"blank":
+            return "   "
+        return "O aniversário foi ontem."
+
+
+class _FakeEmbedder:
+    def __init__(self, vectors: dict[str, list[float]]) -> None:
+        self._vectors = vectors
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        return [self._vectors[text] for text in texts]
+
+
+def _entry(
+    tmp_path,
+    entry_id: str,
+    *,
+    audio_bytes: bytes = b"\x00",
+    golden: str = "O aniversário foi ontem.",
+    keywords: tuple[str, ...] = (),
+) -> Entry:
+    audio = tmp_path / f"{entry_id}.wav"
+    audio.write_bytes(audio_bytes)
+    return Entry(id=entry_id, audio=audio, golden=golden, keywords=keywords)
+
+
+def test_run_corpus_records_score_fields(tmp_path) -> None:
+    entry = _entry(tmp_path, "a")
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    report = run_corpus([entry], _FakePipeline(), embedder)
+    assert len(report.outcomes) == 1
+    outcome = report.outcomes[0]
+    assert outcome.entry_id == "a"
+    assert outcome.passed is True
+    assert outcome.similarity == pytest.approx(1.0)
+    assert outcome.structural is not None and outcome.structural.passed is True
+    assert outcome.keywords_passed is True
+    assert outcome.error is None
+
+
+def test_run_corpus_empty_output_fails_before_scoring(tmp_path) -> None:
+    entry = _entry(tmp_path, "a", audio_bytes=b"blank")
+    report = run_corpus([entry], _FakePipeline(), _FakeEmbedder({}))
+    outcome = report.outcomes[0]
+    assert outcome.passed is False
+    assert outcome.error == "empty output"
+    assert outcome.similarity is None
+
+
+def test_missing_audio_fails_entry_and_continues(tmp_path) -> None:
+    missing = Entry(id="gone", audio=tmp_path / "nope.wav", golden="O é bom.")
+    good = _entry(tmp_path, "ok")
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    report = run_corpus([missing, good], _FakePipeline(), embedder)
+    assert report.outcomes[0].passed is False
+    assert "audio file not found" in (report.outcomes[0].error or "")
+    assert report.outcomes[1].passed is True
+    assert report.passed is False
+
+
+def test_pipeline_exception_fails_entry_and_continues(tmp_path) -> None:
+    boom = _entry(tmp_path, "boom", audio_bytes=b"boom")
+    ok = _entry(tmp_path, "ok")
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    report = run_corpus([boom, ok], _FakePipeline(), embedder)
+    assert report.outcomes[0].passed is False
+    assert "transcriber exploded" in (report.outcomes[0].error or "")
+    assert report.outcomes[1].passed is True
+    assert report.passed is False
+
+
+def test_corpus_passes_only_when_every_entry_passes(tmp_path) -> None:
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    bad = _entry(tmp_path, "bad", keywords=("praia",))
+    ok = _entry(tmp_path, "ok")
+    assert run_corpus([bad, ok], _FakePipeline(), embedder).passed is False
+    assert run_corpus([ok], _FakePipeline(), embedder).passed is True
+
+
+def test_keyword_failure_reflected_in_outcome(tmp_path) -> None:
+    entry = _entry(tmp_path, "kw", keywords=("praia",))
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    outcome = run_corpus([entry], _FakePipeline(), embedder).outcomes[0]
+    assert outcome.similarity == pytest.approx(1.0)
+    assert outcome.keywords_passed is False
+    assert outcome.error is None
+    assert outcome.passed is False
+
+
+def test_run_is_deterministic_with_injected_fakes(tmp_path) -> None:
+    entries = [_entry(tmp_path, "a"), _entry(tmp_path, "b", audio_bytes=b"boom")]
+    embedder = _FakeEmbedder({"O aniversário foi ontem.": [1.0, 0.0]})
+    first = run_corpus(entries, _FakePipeline(), embedder)
+    second = run_corpus(entries, _FakePipeline(), embedder)
+    assert first == second
