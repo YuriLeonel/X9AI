@@ -3,7 +3,7 @@
 import pytest
 
 from x9ai.config import Settings
-from x9ai.oracle import SemanticEmbedder, cosine
+from x9ai.oracle import SemanticEmbedder, cosine, keywords_present, structural_check
 
 
 class _FakeModel:
@@ -50,3 +50,50 @@ def test_semantic_embedder_encode_raises_when_extra_missing() -> None:
     embedder = SemanticEmbedder(Settings(), no_import_factory)
     with pytest.raises(ImportError):
         embedder.encode(["o texto é bom"])
+
+
+def test_structural_missing_sentence_capital_fails() -> None:
+    outcome = structural_check("ola mundo.")
+    assert outcome.capital_start is False
+    assert outcome.passed is False
+
+
+def test_structural_unterminated_sentence_fails() -> None:
+    outcome = structural_check("Ola mundo")
+    assert outcome.ending_punctuation is False
+
+
+def test_structural_multi_sentence_mixed_casing_fails() -> None:
+    outcome = structural_check("Ola. mundo bom.")
+    assert outcome.capital_start is False
+    assert outcome.passed is False
+
+
+def test_structural_clean_sentence_passes_all() -> None:
+    outcome = structural_check("O aniversário foi ontem no parque!")
+    assert outcome.capital_start is True
+    assert outcome.ending_punctuation is True
+    assert outcome.no_fillers is True
+    assert outcome.passed is True
+
+
+def test_structural_filler_present_fails_from_shared_blacklist() -> None:
+    assert structural_check("O tipo é bom.").no_fillers is False
+    assert structural_check("O ééé é bom.").no_fillers is False
+
+
+def test_structural_filler_matches_case_insensitive_whole_word() -> None:
+    assert structural_check("O TIPO é bom.").no_fillers is False
+    assert structural_check("O tipografia é boa.").no_fillers is True
+
+
+def test_keywords_requires_each_declared_keyword() -> None:
+    output = "O aniversário foi ontem no parque."
+    assert keywords_present(["aniversário", "parque"], output) is True
+    assert keywords_present(["aniversário", "parque", "praia"], output) is False
+
+
+def test_keywords_match_case_insensitive_substring_and_empty_passes() -> None:
+    assert keywords_present(["PARQUE"], "O aniversário foi no parque.") is True
+    assert keywords_present(["aniversário"], "Os aniversários foram ontem.") is True
+    assert keywords_present([], "Qualquer texto.") is True
