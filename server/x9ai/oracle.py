@@ -7,10 +7,12 @@ The embedding provider is lazy (AD-011 pattern): importing this module never req
 sentence-transformers; only an actual encode call does.
 """
 
+import json
 import math
 import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 from x9ai.config import Settings
@@ -134,3 +136,68 @@ def score(
         structural=structural_check(output),
         keywords_passed=keywords_present(keywords, output),
     )
+
+
+class CorpusError(Exception):
+    """Raised when a corpus directory cannot be loaded or is malformed."""
+
+
+@dataclass(frozen=True)
+class Entry:
+    """One golden-corpus test case."""
+
+    id: str
+    audio: Path
+    golden: str
+    language: str = "pt"
+    keywords: tuple[str, ...] = ()
+
+
+def load_corpus(corpus_dir: str | Path) -> list[Entry]:
+    """Load `golden.json` from `corpus_dir` into a validated list of `Entry`; audio paths
+    resolve relative to the corpus dir. Raises `CorpusError` on any manifest problem."""
+    root = Path(corpus_dir)
+    manifest = root / "golden.json"
+    if not manifest.is_file():
+        raise CorpusError(f"corpus manifest not found: {manifest}")
+    try:
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise CorpusError(f"invalid JSON in {manifest}: {exc}") from exc
+    entries = data.get("entries") if isinstance(data, dict) else None
+    if not isinstance(entries, list) or not entries:
+        raise CorpusError("golden.json must contain a non-empty 'entries' list")
+
+    loaded: list[Entry] = []
+    for raw in entries:
+        if not isinstance(raw, dict):
+            raise CorpusError(f"entry is not an object: {raw!r}")
+        entry_id = raw.get("id")
+        audio_rel = raw.get("audio")
+        golden = raw.get("golden")
+        if not isinstance(entry_id, str) or not entry_id.strip():
+            raise CorpusError(f"entry missing non-empty 'id': {raw!r}")
+        if not isinstance(audio_rel, str) or not audio_rel.strip():
+            raise CorpusError(f"entry {entry_id} missing non-empty 'audio'")
+        if not isinstance(golden, str) or not golden.strip():
+            raise CorpusError(f"entry {entry_id} missing non-empty 'golden'")
+        language = raw.get("language", "pt")
+        if not isinstance(language, str) or not language.strip():
+            raise CorpusError(f"entry {entry_id} has invalid 'language'")
+        keywords_raw = raw.get("keywords", [])
+        if not isinstance(keywords_raw, list) or not all(
+            isinstance(keyword, str) for keyword in keywords_raw
+        ):
+            raise CorpusError(
+                f"entry {entry_id} has invalid 'keywords' (expected a list of strings)"
+            )
+        loaded.append(
+            Entry(
+                id=entry_id,
+                audio=(root / audio_rel).resolve(),
+                golden=golden,
+                language=language,
+                keywords=tuple(keywords_raw),
+            )
+        )
+    return loaded

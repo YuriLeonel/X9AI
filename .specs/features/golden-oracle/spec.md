@@ -192,7 +192,7 @@ scoring functions produce byte-identical reports across two runs.
 | GO-09 | P1: Structural checks | Design | Pending |
 | GO-10 | P1: Keyword presence | In Tasks | In Tasks |
 | GO-11 | P1: Keyword presence | In Tasks | In Tasks |
-| GO-12 | P1: Corpus runner | Design | Pending |
+| GO-12 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-13 | P1: Corpus runner | Design | Pending |
 | GO-14 | P1: Corpus runner | In Tasks | In Tasks |
 | GO-15 | P1: Corpus runner | Design | Pending |
