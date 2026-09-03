@@ -85,7 +85,7 @@ def _real_pipeline(settings: Settings) -> Pipeline:
 
 
 def create_app(pipeline: Pipeline | None = None, settings: Settings | None = None) -> FastAPI:
-    settings = settings or Settings()
+    settings = settings or Settings.from_env()
     pipeline = pipeline or _real_pipeline(settings)
 
     app = FastAPI(
